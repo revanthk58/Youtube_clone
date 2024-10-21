@@ -1,0 +1,76 @@
+.button {
+    height: 35px;
+    width: 120px;
+    background-color: rgb(113, 246, 113);
+    color:white;
+    margin-top: 20px; /* Add some space above the button */
+    font-family: 'italic'; /* Fixed typo from 'itlic' to 'italic' */
+    font-size: 20px;
+    transition: transform 0.5s; /* Smooth transition for transform */
+    border-radius: 10px;
+}
+
+.rotate {
+    animation: rotate 0.5s; /* Trigger rotate animation */
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg); /* Start from original position */
+    }
+    to {
+        transform: rotate(360deg); /* Complete rotation */
+    }
+}
+
+
+
+
+body{
+    display: flex;
+    align-items: top;
+    justify-content: end;
+    padding: 25px;
+
+    background-image: url(Youtube.jpg);
+    background-size: cover;
+    height: 90vh;
+}
+
+.container {
+    text-align: center; /* Center text within the form */
+    background-image: url(yt.jpg);
+    background-size: cover;
+    height: 17vh;
+    width: 100vh;
+    margin: 30px;
+    padding-top: 25px;
+    border-radius: 10px;
+    padding-right: 5vh;
+
+
+}
+
+.heading{
+    font-size: 25px;
+    color: rgb(251, 246, 251);
+    
+}
+
+input[type="url"] {
+    font-size: 16px;  /* Font size for input */
+    padding: 10px;     /* Increase padding for a larger clickable area */
+    width: 70%;       /* Full width for the input */
+    height: 40px;      /* Set a specific height */
+    box-sizing: border-box; /* Include padding in the width/height */
+    border: 2px solid rgb(245, 93, 124); /* Optional: Add a border */
+    border-radius:5px; /* Optional: Rounded corners */
+    background-color: rgb(253, 45, 45);
+}
+
+input[type="url"]::placeholder {
+    color:white; /* Change this to your desired color */
+    opacity: 1;  /* Optional: Ensure full opacity */
+}
+
+

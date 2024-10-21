@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Frontend.css">
+    <title>YOUtube </title>
+</head>
+<body>
+    <div class="container">
+        <form id="downloadForm" class="text-center">
+            <label for="link" class="heading">Video Link:</label>
+            <input type="url" id="link" name="link" required placeholder="Enter video URL here">
+            <br>
+            <button type="submit" class="button" id="downloadButton">Click</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('downloadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const button = document.getElementById('downloadButton');
+            button.classList.add('rotate'); // Add rotate class on click
+            
+            const formData = new FormData(event.target);
+            
+            try {
+                const response = await fetch('http://localhost:8000/download', {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                alert(`Download complete! Filename: ${result.filename}`);  // Show success message with filename
+            } catch (error) {
+                alert(`Error: ${error.message}`);  // Handle errors
+            } finally {
+                // Remove the rotation class after the animation completes
+                button.classList.remove('rotate'); 
+            }
+        });
+    </script>
+</body>
+</html>
