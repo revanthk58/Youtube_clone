@@ -3,46 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Frontend.css">
-    <title>YOUtube </title>
+    <title>YouTube Downloader</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #111;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .heading {
+            font-size: 25px;
+            color: white;
+        }
+
+        input {
+            padding: 10px;
+            width: 250px;
+            margin-top: 10px;
+        }
+
+        .button {
+            height: 35px;
+            width: 120px;
+            background-color: green;
+            color: white;
+            margin-top: 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .rotate {
+            animation: rotate 0.5s;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container">
-        <form id="downloadForm" class="text-center">
-            <label for="link" class="heading">Video Link:</label>
-            <input type="url" id="link" name="link" required placeholder="Enter video URL here">
-            <br>
-            <button type="submit" class="button" id="downloadButton">Click</button>
-        </form>
-    </div>
 
-    <script>
-        document.getElementById('downloadForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const button = document.getElementById('downloadButton');
-            button.classList.add('rotate'); // Add rotate class on click
-            
-            const formData = new FormData(event.target);
-            
-            try {
-                const response = await fetch('http://localhost:8000/download', {
-                    method: 'POST',
-                    body: formData,
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+<div class="container">
+    <form id="downloadForm">
+        <label class="heading">Video Link:</label><br>
+        <input type="url" name="link" required placeholder="Enter video URL"><br>
+        <button type="submit" class="button" id="downloadButton">Download</button>
+    </form>
+</div>
 
-                const result = await response.json();
-                alert(`Download complete! Filename: ${result.filename}`);  // Show success message with filename
-            } catch (error) {
-                alert(`Error: ${error.message}`);  // Handle errors
-            } finally {
-                // Remove the rotation class after the animation completes
-                button.classList.remove('rotate'); 
-            }
+<script>
+document.getElementById('downloadForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const button = document.getElementById('downloadButton');
+    button.classList.add('rotate');
+
+    const formData = new FormData(event.target);
+
+    try {
+        // ✅ FIX: use relative path (important for deploy)
+        const response = await fetch('/download', {
+            method: 'POST',
+            body: formData,
         });
-    </script>
+
+        if (!response.ok) {
+            throw new Error("Download failed");
+        }
+
+        // ✅ FIX: handle file download instead of JSON
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "video.mp4";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+    } catch (error) {
+        alert("Error: " + error.message);
+    } finally {
+        button.classList.remove('rotate');
+    }
+});
+</script>
+
 </body>
 </html>
