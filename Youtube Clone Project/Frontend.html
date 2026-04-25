@@ -15,6 +15,7 @@
         }
 
         .container {
+            width:50vh;
             text-align: center;
             background-color: #222;
             padding: 20px;
@@ -75,7 +76,7 @@ document.getElementById('downloadForm').addEventListener('submit', async functio
 
     try {
         // ✅ FIX: use relative path (important for deploy)
-        const response = await fetch('https://www.localhost:3000/download', {
+        const response = await fetch('/download', {
             method: 'POST',
             body: formData,
         });
@@ -90,7 +91,7 @@ document.getElementById('downloadForm').addEventListener('submit', async functio
 
         const a = document.createElement('a');
         a.href = url;
-        a.download = "video.mp4";
+        a.download = "video.mp3";
         document.body.appendChild(a);
         a.click();
         a.remove();
