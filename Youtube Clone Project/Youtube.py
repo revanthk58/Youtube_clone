@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse, FileResponse
 import os
 import yt_dlp
 import uuid
@@ -16,18 +17,27 @@ app.add_middleware(
 
 cur_directory = os.getcwd()
 
+# ✅ Serve your existing HTML file
+@app.get("/", response_class=HTMLResponse)
+def home():
+    with open("Frontend.html", "r", encoding="utf-8") as file:
+        return file.read()
+
+# ✅ Download API
 @app.post("/download")
 async def download_video(link: str = Form(...)):
-    # Generate a unique filename using the first 15 characters of the link
-    sanitized_link = link.replace("https://", "").replace("http://", "").replace("/", "_")  # Sanitize link for filename
-    filename = f"video-{sanitized_link[:15]}.mp4"
+    filename = f"{uuid.uuid4()}.mp4"
 
-    youtube_dl_options = {
-        "format": "b",
-        "out": os.path.join(cur_directory, filename)
+    ydl_opts = {
+        "format": "best",
+        "outtmpl": os.path.join(cur_directory, filename)  # FIXED
     }
-    
-    with yt_dlp.YoutubeDL(youtube_dl_options) as ydl:
+
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([link])
-    
-    return {"message": "Download complete", "filename": filename}
+
+    return FileResponse(
+        path=filename,
+        media_type="application/octet-stream",
+        filename=filename
+    )
