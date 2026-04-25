@@ -75,7 +75,7 @@ document.getElementById('downloadForm').addEventListener('submit', async functio
 
     try {
         // ✅ FIX: use relative path (important for deploy)
-        const response = await fetch('/download', {
+        const response = await fetch('https://www.localhost:3000/download', {
             method: 'POST',
             body: formData,
         });
