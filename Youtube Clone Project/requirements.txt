@@ -2,3 +2,4 @@ fastapi
 yt-dlp
 uvicorn
 python-multipart
+gunicorn
