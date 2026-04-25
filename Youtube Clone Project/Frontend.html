@@ -75,23 +75,24 @@ document.getElementById('downloadForm').addEventListener('submit', async functio
     const formData = new FormData(event.target);
 
     try {
-        // ✅ FIX: use relative path (important for deploy)
         const response = await fetch('/download', {
             method: 'POST',
             body: formData,
         });
-
+        
         if (!response.ok) {
-            throw new Error("Download failed");
+            const err = await response.text();
+            alert("Error: " + err);
+            return;
         }
-
-        // ✅ FIX: handle file download instead of JSON
+        
+        // ✅ Handle file download properly
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-
+        
         const a = document.createElement('a');
         a.href = url;
-        a.download = "video.mp3";
+        a.download = "video.mp4";
         document.body.appendChild(a);
         a.click();
         a.remove();
