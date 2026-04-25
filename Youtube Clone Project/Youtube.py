@@ -37,11 +37,11 @@ def home():
 @app.post("/download")
 async def download_video(link: str = Form(...)):
     try:
-        filename = f"{uuid.uuid4()}.mp4"
+        filename = f"{uuid.uuid4()}.mp3"
         file_path = os.path.join(BASE_DIR, filename)
 
         ydl_opts = {
-            "format": "best[ext=mp4]/best",
+            "format": "best[ext=mp3]/best",
             "outtmpl": file_path,
             "noplaylist": True
         }
