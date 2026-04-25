@@ -36,18 +36,23 @@ def home():
 
 @app.post("/download")
 async def download_video(link: str = Form(...)):
-    filename = f"{uuid.uuid4()}.mp4"
+    try:
+        filename = f"{uuid.uuid4()}.mp4"
+        file_path = os.path.join(BASE_DIR, filename)
 
-    ydl_opts = {
-        "format": "best",
-        "outtmpl": os.path.join(BASE_DIR, filename)
-    }
+        ydl_opts = {
+            "format": "best[ext=mp4]/best",
+            "outtmpl": file_path,
+            "noplaylist": True
+        }
 
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([link])
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([link])
 
-    return FileResponse(
-        path=os.path.join(BASE_DIR, filename),
-        media_type="application/octet-stream",
-        filename=filename
-    )
+        if not os.path.exists(file_path):
+            return {"error": "Download failed"}
+
+        return FileResponse(file_path, filename=filename)
+
+    except Exception as e:
+        return {"error": str(e)}
