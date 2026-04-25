@@ -15,21 +15,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 🔥 Get correct base directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# ✅ Serve HTML properly
+# 🔥 Auto-find Frontend.html anywhere in project
+def find_html_file(filename):
+    for root, dirs, files in os.walk(BASE_DIR):
+        if filename in files:
+            return os.path.join(root, filename)
+    return None
+
 @app.get("/", response_class=HTMLResponse)
 def home():
-    file_path = os.path.join(BASE_DIR, "Frontend.html")
-    
-    if not os.path.exists(file_path):
-        return {"error": f"Frontend.html not found at {file_path}"}
-    
-    with open(file_path, "r", encoding="utf-8") as file:
-        return file.read()
+    file_path = find_html_file("Frontend.html")
 
-# ✅ Download API
+    if not file_path:
+        return "<h2>Frontend.html NOT FOUND ❌</h2>"
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        return f.read()
+
 @app.post("/download")
 async def download_video(link: str = Form(...)):
     filename = f"{uuid.uuid4()}.mp4"
