@@ -50,7 +50,7 @@
 
         @keyframes rotate {
             from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            to { transform: rotate(60deg); }
         }
     </style>
 </head>
@@ -92,7 +92,7 @@ document.getElementById('downloadForm').addEventListener('submit', async functio
         
         const a = document.createElement('a');
         a.href = url;
-        a.download = "video.mp4";
+        a.download = "video.mp3";
         document.body.appendChild(a);
         a.click();
         a.remove();
